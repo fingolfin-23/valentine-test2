@@ -16,12 +16,11 @@ yesBtn.style.position = "relative";
 yesBtn.style.transformOrigin = "center center";
 yesBtn.style.transition = "transform 0.3s ease";
 
-// Initialize No button styles - FIXED
-noBtn.style.position = "absolute"; // Change from relative to absolute
-noBtn.style.transition = "transform 0.2s ease";
-noBtn.style.left = "50%"; // Center it initially
-noBtn.style.top = "50%";
-noBtn.style.transform = "translate(-50%, -50%)";
+// Initialize No button styles
+noBtn.style.position = "relative";
+noBtn.style.left = "0";
+noBtn.style.top = "0";
+noBtn.style.transition = "transform 0.3s ease";
 
 // Click Envelope
 envelope.addEventListener("click", () => {
@@ -30,74 +29,70 @@ envelope.addEventListener("click", () => {
 
     setTimeout(() => {
         document.querySelector(".letter-window").classList.add("open");
-        // Reset No button position when letter opens
-        setTimeout(() => {
-            noBtn.style.transform = "translate(-50%, -50%)";
-        }, 600);
     }, 50);
 });
 
-// Function to move No button safely
-function moveNoButton() {
-    // Grow the YES button
+// Logic to move the NO btn on hover
+noBtn.addEventListener("mouseover", () => {
+    // Grow the YES button on hover
     yesScale += 0.3;
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // Get container dimensions
+    // Move the NO button - but keep it within screen bounds
     const letterWindow = document.querySelector(".letter-window");
-    const containerRect = letterWindow.getBoundingClientRect();
+    const letterRect = letterWindow.getBoundingClientRect();
     const noBtnRect = noBtn.getBoundingClientRect();
 
-    // Calculate safe boundaries (stay inside letter window)
-    const padding = 20;
-    const maxX = containerRect.width - noBtnRect.width - padding;
-    const maxY = containerRect.height - noBtnRect.height - padding;
-    const minX = padding;
-    const minY = padding;
+    // Calculate safe movement bounds
+    const maxX = (letterRect.width / 2) - 50;
+    const maxY = (letterRect.height / 2) - 50;
 
-    // Generate random position within bounds
-    let randomX = Math.floor(Math.random() * (maxX - minX + 1) + minX);
-    let randomY = Math.floor(Math.random() * (maxY - minY + 1) + minY);
+    const moveX = (Math.random() * maxX * 2) - maxX;
+    const moveY = (Math.random() * maxY * 2) - maxY;
 
-    // Convert to position relative to letter window
-    noBtn.style.position = "absolute";
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-    noBtn.style.transform = "none"; // Remove translate
-}
-
-// Move NO button on hover
-noBtn.addEventListener("mouseover", (e) => {
-    e.stopPropagation();
-    moveNoButton();
+    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 });
 
-// Move NO button on click
-noBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    moveNoButton();
+// Also grow YES button when NO is clicked
+noBtn.addEventListener("click", () => {
+    yesScale += 0.3;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    // Move NO button to a random position instead of resetting
+    const letterWindow = document.querySelector(".letter-window");
+    const letterRect = letterWindow.getBoundingClientRect();
+
+    const maxX = (letterRect.width / 2) - 50;
+    const maxY = (letterRect.height / 2) - 50;
+
+    const moveX = (Math.random() * maxX * 2) - maxX;
+    const moveY = (Math.random() * maxY * 2) - maxY;
+
+    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 });
 
 // YES is clicked
 yesBtn.addEventListener("click", () => {
     title.textContent = "Yippeeee!";
+
     catImg.src = "cat_dance.gif";
+
     document.querySelector(".letter-window").classList.add("final");
+
     buttons.style.display = "none";
+
     finalText.style.display = "block";
 });
 
-// Reset No button position if Yes is clicked (just in case)
-yesBtn.addEventListener("click", () => {
-    noBtn.style.left = "50%";
-    noBtn.style.top = "50%";
-    noBtn.style.transform = "translate(-50%, -50%)";
+// Reset No button position when Yes is clicked (for next time)
+yesBtn.addEventListener("click", function resetNoButton() {
+    // This runs when Yes is clicked, but we hide the buttons anyway
+    // So no need to reset since buttons disappear
 });
 
-// Make sure No button starts centered
+// Make sure No button starts normal on page load
 window.addEventListener("load", () => {
-    noBtn.style.left = "50%";
-    noBtn.style.top = "50%";
-    noBtn.style.transform = "translate(-50%, -50%)";
-    noBtn.style.position = "absolute";
+    noBtn.style.transform = "translate(0, 0)";
+    noBtn.style.left = "0";
+    noBtn.style.top = "0";
 });
