@@ -70,6 +70,27 @@ body {
     opacity: 1;
 }
 
+/* FORCE text ABOVE cat on ALL devices */
+#letter-title {
+    order: 1;
+    margin-bottom: 5px;
+}
+
+.cat {
+    order: 2;
+    width: 250px;
+    margin: 10px 0;
+    transition: width 0.4s ease;
+}
+
+.buttons {
+    order: 3;
+}
+
+.final-text {
+    order: 4;
+}
+
 h1 {
     font-size: 30px;
     margin: 0;
@@ -80,7 +101,6 @@ p {
 }
 
 /* Cat */
-
 .cat {
     width: 250px;
     margin: 10px 0;
@@ -138,4 +158,100 @@ p {
     padding: 10px 20px;
     background-color: rgba(255, 240, 240, 0.5);
     border-radius: 12px;
+}
+
+/* ===== FIX FOR BOTH MOBILE AND LAPTOP ===== */
+/* This ensures text is ALWAYS above the cat on ALL devices */
+
+.letter-window {
+    display: flex;
+    flex-direction: column;
+}
+
+#letter-title {
+    order: 1;
+}
+
+.cat {
+    order: 2;
+}
+
+.buttons {
+    order: 3;
+}
+
+.final-text {
+    order: 4;
+}
+
+/* LAPTOP FIX (larger screens) */
+@media only screen and (min-width: 769px) {
+    .letter-window {
+        padding-top: 180px;
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 30px;
+        margin-bottom: 5px;
+    }
+
+    .cat {
+        width: 250px;
+        margin: 5px 0;
+    }
+}
+
+/* MOBILE FIX (phones and tablets) */
+@media only screen and (max-width: 768px) {
+    .letter-window {
+        padding-top: 100px;
+        aspect-ratio: auto;
+        min-height: 550px;
+        justify-content: flex-start;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin: 15px 0 5px 0;
+        padding: 0 10px;
+    }
+
+    .cat {
+        width: 180px;
+        margin: 0 0 10px 0;
+    }
+
+    .buttons {
+        gap: 15px;
+    }
+
+    .btn {
+        width: 90px;
+    }
+}
+
+/* SMALL PHONES (under 480px) */
+@media only screen and (max-width: 480px) {
+    .letter-window {
+        padding-top: 70px;
+        min-height: 500px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .cat {
+        width: 150px;
+    }
+
+    .btn {
+        width: 80px;
+    }
+
+    .final-text {
+        font-size: 16px;
+        padding: 8px 15px;
+    }
 }
