@@ -1,4 +1,3 @@
-// Elements
 const envelope = document.getElementById("envelope-container");
 const letter = document.getElementById("letter-container");
 const noBtn = document.querySelector(".no-btn");
@@ -17,6 +16,12 @@ yesBtn.style.position = "relative";
 yesBtn.style.transformOrigin = "center center";
 yesBtn.style.transition = "transform 0.3s ease";
 
+// Initialize No button styles
+noBtn.style.position = "relative";
+noBtn.style.left = "0";
+noBtn.style.top = "0";
+noBtn.style.transition = "transform 0.3s ease";
+
 // Click Envelope
 envelope.addEventListener("click", () => {
     envelope.style.display = "none";
@@ -27,31 +32,43 @@ envelope.addEventListener("click", () => {
     }, 50);
 });
 
-// Logic to move the NO btn
+// Logic to move the NO btn on hover
 noBtn.addEventListener("mouseover", () => {
-    const min = 200;
-    const max = 200;
+    // Grow the YES button on hover
+    yesScale += 0.3;
+    yesBtn.style.transform = `scale(${yesScale})`;
 
-    const distance = Math.random() * (max - min) + min;
-    const angle = Math.random() * Math.PI * 2;
+    // Move the NO button - but keep it within screen bounds
+    const letterWindow = document.querySelector(".letter-window");
+    const letterRect = letterWindow.getBoundingClientRect();
+    const noBtnRect = noBtn.getBoundingClientRect();
 
-    const moveX = Math.cos(angle) * distance;
-    const moveY = Math.sin(angle) * distance;
+    // Calculate safe movement bounds
+    const maxX = (letterRect.width / 2) - 50;
+    const maxY = (letterRect.height / 2) - 50;
 
-    noBtn.style.transition = "transform 0.3s ease";
+    const moveX = (Math.random() * maxX * 2) - maxX;
+    const moveY = (Math.random() * maxY * 2) - maxY;
+
     noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 });
 
-// Logic to make YES btn grow when NO is clicked
+// Also grow YES button when NO is clicked
 noBtn.addEventListener("click", () => {
-    yesScale += 0.3; // Increase scale by 0.3 each time
-
+    yesScale += 0.3;
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // Reset the transform after moving to prevent cumulative issues
-    setTimeout(() => {
-        noBtn.style.transform = "translate(0, 0)";
-    }, 300);
+    // Move NO button to a random position instead of resetting
+    const letterWindow = document.querySelector(".letter-window");
+    const letterRect = letterWindow.getBoundingClientRect();
+
+    const maxX = (letterRect.width / 2) - 50;
+    const maxY = (letterRect.height / 2) - 50;
+
+    const moveX = (Math.random() * maxX * 2) - maxX;
+    const moveY = (Math.random() * maxY * 2) - maxY;
+
+    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 });
 
 // YES is clicked
@@ -65,4 +82,17 @@ yesBtn.addEventListener("click", () => {
     buttons.style.display = "none";
 
     finalText.style.display = "block";
+});
+
+// Reset No button position when Yes is clicked (for next time)
+yesBtn.addEventListener("click", function resetNoButton() {
+    // This runs when Yes is clicked, but we hide the buttons anyway
+    // So no need to reset since buttons disappear
+});
+
+// Make sure No button starts normal on page load
+window.addEventListener("load", () => {
+    noBtn.style.transform = "translate(0, 0)";
+    noBtn.style.left = "0";
+    noBtn.style.top = "0";
 });
